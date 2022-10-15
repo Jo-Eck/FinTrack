@@ -24,14 +24,14 @@ class DbExplorer:
     def __exit__(self, exeption_type, exeption_value, traceback):
         self.conn.close()
 
-    def insert_transaction(self, category,  name, description, value):
+    def insert_transaction(self,  name, description, category, value):
         """"inserts new transaction into the Database"""
 
         try:
             cur = self.conn.cursor()
 
             sql = f"""INSERT INTO fintrackschema.transactions  VALUES(DEFAULT,
-                        '{category}', '{name}', '{description}' DEFAULT, '{value}',);"""
+                        '{name}', '{description}', '{category}', DEFAULT, '{value}');"""
 
             cur.execute(sql)
             self.conn.commit()
@@ -53,3 +53,37 @@ class DbExplorer:
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
+
+    def get_last_transactions(self, amount=None):
+        """Provides the last N Trasnactions form the Database,
+            if no number of transactions is given it returns all"""
+
+        try:
+            cur = self.conn.cursor()
+            sql = None
+
+            if amount is not None:
+                sql = f"""select * from fintrackschema.transactions limit {amount};"""
+            else:
+                sql = """select * from fintrackschema.transactions;"""
+
+            cur.execute(sql)
+            return cur.fetchall()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
+
+    def get_categories(self):
+        """Provides all categories from the database"""
+
+        try:
+            cur = self.conn.cursor()
+            sql = """select * from fintrackschema.categories;"""
+
+            cur.execute(sql)
+            return cur.fetchall()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
