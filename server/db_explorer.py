@@ -30,8 +30,8 @@ class DbExplorer:
         try:
             cur = self.conn.cursor()
 
-            sql = f"""INSERT INTO public.transactions VALUES(DEFAULT,
-                        '{category}', '{name}', '{description}', '{value}', DEFAULT);"""
+            sql = f"""INSERT INTO fintrackschema.transactions  VALUES(DEFAULT,
+                        '{category}', '{name}', '{description}' DEFAULT, '{value}',);"""
 
             cur.execute(sql)
             self.conn.commit()
@@ -45,7 +45,7 @@ class DbExplorer:
         try:
             cur = self.conn.cursor()
 
-            sql = f"""INSERT INTO public.categories  VALUES('{name}', '{description}');"""
+            sql = f"""INSERT INTO fintrackschema.categories VALUES('{name}', '{description}');"""
 
             cur.execute(sql)
             self.conn.commit()
