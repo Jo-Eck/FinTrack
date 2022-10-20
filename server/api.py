@@ -52,12 +52,11 @@ def create_new_transaction():
             jsondata.get("value"),
             jsondata.get("username"))
 # TODO implement propper return codes
-        return ({}, 200)
+        return("Success :D", 200)
 
 
 @app.route('/login')
 def login():
-
     return 'Login'
 
 
