@@ -1,4 +1,5 @@
 import configparser as cp
+from werkzeug.security import generate_password_hash
 import db_explorer
 from flask import(Flask, request)
 
@@ -58,7 +59,6 @@ def create_new_transaction():
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
-    # TODO implement password hasing here aswell
     remember = True if request.form.get('remember') else False
 
     with get_explorer() as explorer:
@@ -73,8 +73,7 @@ def login():
 def signup_post():
 
     username = request.form.get("username")
-    password = request.form.get("password")
-    # TODO implement password Hashing
+    password = generate_password_hash(request.form.get("password"))
 
     with get_explorer() as explorer:
 

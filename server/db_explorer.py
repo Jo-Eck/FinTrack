@@ -1,5 +1,6 @@
 import configparser as cp
 from numpy import equal
+from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
 from sympy import false
 
@@ -126,7 +127,7 @@ class DbExplorer:
 
             cur.execute(sql)
 
-            return cur.fetchone()[0] == password
+            return check_password_hash(cur.fetchone()[0], password)
 
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
@@ -134,6 +135,7 @@ class DbExplorer:
 
     def create_user(self, name, password):
         """Creates a new user in the database"""
+        print(len(password))
         try:
             cur = self.conn.cursor()
 
