@@ -1,5 +1,7 @@
 import configparser as cp
+from numpy import equal
 import psycopg2
+from sympy import false
 
 
 class DbExplorer:
@@ -102,14 +104,29 @@ class DbExplorer:
             print(error)
             return None
 
-    def check_user_existance(self, name):
+    def check_user_existance(self, username):
         """Checks if useraccount """
         try:
             cur = self.conn.cursor()
-            sql = f"""select * from fintrackschema.users WHERE user_name = '{name}' ;"""
+            sql = f"""select * from fintrackschema.users WHERE user_name = '{username}' ;"""
 
             cur.execute(sql)
             return cur.fetchone() is not None
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
+
+    def check_password(self, username, password):
+        """Compares a provided password with the password of a given user"""
+
+        try:
+            cur = self.conn.cursor()
+            sql = f"""select user_password from fintrackschema.users WHERE user_name = '{username}' ;"""
+
+            cur.execute(sql)
+
+            return cur.fetchone()[0] == password
 
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)

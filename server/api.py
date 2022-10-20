@@ -43,28 +43,38 @@ def get_users():
 @app.post('/new_transaction')
 def create_new_transaction():
     """Calls for a new Trasnaction to be inserted into the Database with the recieved Jsons"""
-    jsondata = request.json
     with get_explorer() as explorer:
         explorer.insert_transaction(
-            jsondata.get("name"),
-            jsondata.get("description"),
-            jsondata.get("category"),
-            jsondata.get("value"),
-            jsondata.get("username"))
+            request.form.get("name"),
+            request.form.get("description"),
+            request.form.get("category"),
+            request.form.get("value"),
+            request.form.get("username"))
 # TODO implement propper return codes
         return("Success :D", 200)
 
 
-@app.route('/login')
+@app.post('/login')
 def login():
-    return 'Login'
+    username = request.form.get('username')
+    password = request.form.get('password')
+    # TODO implement password hasing here aswell
+    remember = True if request.form.get('remember') else False
+
+    with get_explorer() as explorer:
+        if not explorer.check_user_existance(username):
+            return ("Username or password wrong ")
+        if explorer.check_password(username, password):
+            return("Login Success :D")
+    return ("Username or password wrong ")
 
 
-@app.route('/signup', methods=['POST'])
+@ app.route('/signup', methods=['POST'])
 def signup_post():
 
     username = request.form.get("username")
     password = request.form.get("password")
+    # TODO implement password Hashing
 
     with get_explorer() as explorer:
 
@@ -75,12 +85,13 @@ def signup_post():
         # TODO implemnt proper return codes
 
 
-@app.route('/logout')
+@ app.route('/logout')
 def logout():
     return 'Logout'
 
 
-if __name__ == '__app__':
+if __name__ == '__main__':
+    print(conf.get('Flask', 'API_PORT'))
     app.run(
         conf.get('Flask', 'API_HOST'),
         conf.get('Flask', 'API_PORT'),
