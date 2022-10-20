@@ -24,14 +24,14 @@ class DbExplorer:
     def __exit__(self, exeption_type, exeption_value, traceback):
         self.conn.close()
 
-    def insert_transaction(self,  name, description, category, value):
+    def insert_transaction(self,  name, description, category, value, username):
         """"inserts new transaction into the Database"""
 
         try:
             cur = self.conn.cursor()
 
             sql = f"""INSERT INTO fintrackschema.transactions  VALUES(DEFAULT,
-                        '{name}', '{description}', '{category}', DEFAULT, '{value}');"""
+                        '{name}', '{description}', '{category}', DEFAULT, '{value}','{username}');"""
 
             cur.execute(sql)
             self.conn.commit()
@@ -87,3 +87,44 @@ class DbExplorer:
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
             return None
+
+    def get_users(self):
+        """Provides all usernames from the database"""
+
+        try:
+            cur = self.conn.cursor()
+            sql = """select user_name from fintrackschema.users;"""
+
+            cur.execute(sql)
+            return cur.fetchall()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
+
+    def check_user_existance(self, name):
+        """Checks if useraccount """
+        try:
+            cur = self.conn.cursor()
+            sql = f"""select * from fintrackschema.users WHERE user_name = '{name}' ;"""
+
+            cur.execute(sql)
+            return cur.fetchone() is not None
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None
+
+    def create_user(self, name, password):
+        """Creates a new user in the database"""
+        try:
+            cur = self.conn.cursor()
+
+            sql = f"""INSERT INTO fintrackschema.users  VALUES('{name}','{password}');"""
+
+            cur.execute(sql)
+            self.conn.commit()
+
+            cur.close()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
