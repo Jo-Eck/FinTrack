@@ -79,7 +79,8 @@ CREATE TABLE fintrackschema.transactions (
     transaction_description character varying(500),
     transaction_category character varying(50) NOT NULL,
     "timestamp" timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    betrag real NOT NULL
+    betrag real NOT NULL,
+    "user" character varying(20) NOT NULL
 );
 
 
@@ -143,6 +144,25 @@ ALTER SEQUENCE fintrackschema.transactions_transaction_id_seq OWNED BY fintracks
 
 
 --
+-- Name: users; Type: TABLE; Schema: fintrackschema; Owner: postgres
+--
+
+CREATE TABLE fintrackschema.users (
+    user_name character varying(20) NOT NULL,
+    user_password character varying(102) NOT NULL
+);
+
+
+ALTER TABLE fintrackschema.users OWNER TO postgres;
+
+--
+-- Name: TABLE users; Type: COMMENT; Schema: fintrackschema; Owner: postgres
+--
+
+COMMENT ON TABLE fintrackschema.users IS 'users with an account';
+
+
+--
 -- Name: transactions transaction_id; Type: DEFAULT; Schema: fintrackschema; Owner: postgres
 --
 
@@ -158,6 +178,7 @@ Lebensmittel	Brot, Kaese, Gemuese und Co
 Entertainment	Buecher Filme Kino und Co
 Transport	Sprit Bus und Co
 Miete	
+Neueste Kategorie	eine Weitere Categorie
 \.
 
 
@@ -165,11 +186,20 @@ Miete
 -- Data for Name: transactions; Type: TABLE DATA; Schema: fintrackschema; Owner: postgres
 --
 
-COPY fintrackschema.transactions (transaction_id, transaction_name, transaction_description, transaction_category, "timestamp", betrag) FROM stdin;
-1	Einkauf	Supermark:\nSchnitzel, Kartoffel, Champinons 	Lebensmittel	2022-10-14 17:21:17.561141	25.56
-2	Kino	date im kino	Entertainment	2022-10-14 17:22:05.678987	40.99
-3	Miete	\N	Miete	2022-10-14 17:23:20.599515	400
-5	Reise nach Jerusalem	Flugzeug tickets	Transport	2022-10-14 17:24:28.580667	956
+COPY fintrackschema.transactions (transaction_id, transaction_name, transaction_description, transaction_category, "timestamp", betrag, "user") FROM stdin;
+13	Einkaufen	Snickers und so	Lebensmittel	2022-10-21 11:47:12.039535	655	Jan
+14	koks	einkauf von hygiene artikeln	Lebensmittel	2022-10-21 13:56:08.535939	1e+09	Jan
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: fintrackschema; Owner: postgres
+--
+
+COPY fintrackschema.users (user_name, user_password) FROM stdin;
+Jan	pbkdf2:sha256:260000$9YeqCSv5JgZkzkVg$aa6e4df323e9ad76de9479ddedf103f3e973f108d085a6fce9a312e3fe1f3884
+Jon	pbkdf2:sha256:260000$Phz7s5iLLelF0UgY$23a717f30a2eaa084dcc743d64143650a852d107136c06fc9eea978ef14212d2
+Kiliam	pbkdf2:sha256:260000$05irj1FWOkzjtac2$f8646c93728e15dd769a6fe2a93d15fa4bda95e11228d5f43d92252f62c8e620
 \.
 
 
@@ -177,7 +207,7 @@ COPY fintrackschema.transactions (transaction_id, transaction_name, transaction_
 -- Name: transactions_transaction_id_seq; Type: SEQUENCE SET; Schema: fintrackschema; Owner: postgres
 --
 
-SELECT pg_catalog.setval('fintrackschema.transactions_transaction_id_seq', 5, true);
+SELECT pg_catalog.setval('fintrackschema.transactions_transaction_id_seq', 14, true);
 
 
 --
@@ -197,11 +227,27 @@ ALTER TABLE ONLY fintrackschema.transactions
 
 
 --
+-- Name: users users_pk; Type: CONSTRAINT; Schema: fintrackschema; Owner: postgres
+--
+
+ALTER TABLE ONLY fintrackschema.users
+    ADD CONSTRAINT users_pk PRIMARY KEY (user_name);
+
+
+--
 -- Name: transactions transactions_Categories_null_fk; Type: FK CONSTRAINT; Schema: fintrackschema; Owner: postgres
 --
 
 ALTER TABLE ONLY fintrackschema.transactions
     ADD CONSTRAINT "transactions_Categories_null_fk" FOREIGN KEY (transaction_category) REFERENCES fintrackschema.categories(category_name);
+
+
+--
+-- Name: transactions transactions_users_user_name_fk; Type: FK CONSTRAINT; Schema: fintrackschema; Owner: postgres
+--
+
+ALTER TABLE ONLY fintrackschema.transactions
+    ADD CONSTRAINT transactions_users_user_name_fk FOREIGN KEY ("user") REFERENCES fintrackschema.users(user_name) ON DELETE CASCADE;
 
 
 --
