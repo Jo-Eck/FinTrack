@@ -101,7 +101,6 @@ table_data = [["Value", "Category", "Date"],
               [37, "Groceries", "13.05.2022"],
               [4.69, "Beer", "14.06.2022"],
               [15, "Gift", "15.06.2022"]]
-print(requests.get("localhost:8888/transactions"))
 fig = ff.create_table(table_data)
 fig.update_layout(width = 300)
 fig.write_image("Table.png")
