@@ -6,15 +6,12 @@ LOGIN_URL = 'http://localhost:8888/login'
 
 def login(username, password):
     """
-    
     Sends a post request to the pre-specified URL
+    * logs in user if username + password are correct
 
     Param:
-        name (string): Name of the transaction
-        desc (string): Descripton for the transaction
-        value (float): The monitary value
-        category (string): category of the transaction
-        user (string): The loggin user
+        username (string): Name of user
+        password (string): Password of user
     """
     json = {'username' : f'{username}', 'password' : f'{password}'}
     if username is not None:
@@ -23,7 +20,10 @@ def login(username, password):
     
 st.title("Login")
 username = st.text_input(label="Username")
-password = st.text_input(label="Description")
-login_btn = st.button(label="Save")
+password = st.text_input(label="Password", type="password")
+login_btn = st.button(label="Login")
 if login_btn:
-    login(username, password)
+    if(login(username, password)) == "Login Success :D":
+        st.session_state["auth_status"] = True
+    else:
+        st.session_state["auth_status"] = False
