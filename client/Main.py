@@ -97,7 +97,7 @@ def page_dashboard():
         user = username
         save = st.button(label="Save")
         if save:
-            st.write(f"Your Transaction will be saved")
+            st.write("Your Transaction will be saved")
             post_transaction(name, desc, category, value, user)
 
     with col3:
@@ -112,7 +112,7 @@ def page_login():
     login_btn = st.button(label="Login")
 
     if login_btn:
-        if(check_credentials(username, password)) == 200:
+        if (check_credentials(username, password)) == 200:
             st.session_state["auth_status"] = True
             st.session_state.runpage = page_dashboard
             st.experimental_rerun()

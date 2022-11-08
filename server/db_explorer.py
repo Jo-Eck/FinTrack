@@ -1,8 +1,6 @@
 import configparser as cp
-from numpy import equal
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 import psycopg2
-from sympy import false
 
 
 class DbExplorer:
@@ -34,7 +32,8 @@ class DbExplorer:
             cur = self.conn.cursor()
 
             sql = f"""INSERT INTO fintrackschema.transactions  VALUES(DEFAULT,
-                        '{name}', '{description}', '{category}', DEFAULT, '{value}','{username}');"""
+                        '{name}', '{description}', '{category}', DEFAULT,
+                        '{value}','{username}');"""
 
             cur.execute(sql)
             self.conn.commit()
@@ -48,7 +47,8 @@ class DbExplorer:
         try:
             cur = self.conn.cursor()
 
-            sql = f"""INSERT INTO fintrackschema.categories VALUES('{name}', '{description}');"""
+            sql = f"""INSERT INTO fintrackschema.categories VALUES('{name}',
+            '{description}');"""
 
             cur.execute(sql)
             self.conn.commit()
@@ -66,7 +66,8 @@ class DbExplorer:
             sql = None
 
             if amount is not None:
-                sql = f"""select * from fintrackschema.transactions limit {amount};"""
+                sql = f"""select * from fintrackschema.transactions limit
+                {amount};"""
             else:
                 sql = """select * from fintrackschema.transactions;"""
 
@@ -109,7 +110,8 @@ class DbExplorer:
         """Checks if useraccount """
         try:
             cur = self.conn.cursor()
-            sql = f"""select * from fintrackschema.users WHERE user_name = '{username}' ;"""
+            sql = f"""select * from fintrackschema.users WHERE user_name
+            = '{username}' ;"""
 
             cur.execute(sql)
             return cur.fetchone() is not None
@@ -123,7 +125,8 @@ class DbExplorer:
 
         try:
             cur = self.conn.cursor()
-            sql = f"""select user_password from fintrackschema.users WHERE user_name = '{username}' ;"""
+            sql = f"""select user_password from fintrackschema.users WHERE
+            user_name = '{username}' ;"""
 
             cur.execute(sql)
 
@@ -139,7 +142,8 @@ class DbExplorer:
         try:
             cur = self.conn.cursor()
 
-            sql = f"""INSERT INTO fintrackschema.users  VALUES('{name}','{password}');"""
+            sql = f"""INSERT INTO fintrackschema.users
+            VALUES('{name}','{password}');"""
 
             cur.execute(sql)
             self.conn.commit()

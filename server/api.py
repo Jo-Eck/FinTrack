@@ -1,7 +1,7 @@
 import configparser as cp
 from werkzeug.security import generate_password_hash
 import db_explorer
-from flask import(Flask, request)
+from flask import (Flask, request)
 
 app = Flask(__name__)
 
@@ -17,7 +17,7 @@ def get_explorer():
 @app.route('/')
 def index():
     """Front Page"""
-    return("Whats up?")
+    return ("Whats up?")
 
 
 @app.get('/transactions')
@@ -43,7 +43,8 @@ def get_users():
 
 @app.post('/new_transaction')
 def create_new_transaction():
-    """Calls for a new Trasnaction to be inserted into the Database with the recieved Jsons"""
+    """Calls for a new Trasnaction to be inserted into the Database with the
+    recieved Jsons"""
     with get_explorer() as explorer:
         explorer.insert_transaction(
             request.form.get("name"),
@@ -52,7 +53,7 @@ def create_new_transaction():
             request.form.get("value"),
             request.form.get("username"))
 # TODO implement propper return codes
-        return("Success :D", 200)
+        return ("Success :D", 200)
 
 
 @app.post('/login')
@@ -65,7 +66,7 @@ def login():
         if not explorer.check_user_existance(username):
             return ("", 401)
         if explorer.check_password(username, password):
-            return("", 200)
+            return ("", 200)
     return ("", 401)
 
 
