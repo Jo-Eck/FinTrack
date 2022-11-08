@@ -45,13 +45,14 @@ def get_users():
 def create_new_transaction():
     """Calls for a new Trasnaction to be inserted into the Database with the
     recieved Jsons"""
+    json = request.json
     with get_explorer() as explorer:
         explorer.insert_transaction(
-            request.form.get("name"),
-            request.form.get("description"),
-            request.form.get("category"),
-            request.form.get("value"),
-            request.form.get("username"))
+            json["name"],
+            json["description"],
+            json["category"],
+            json["value"],
+            json["username"])
 # TODO implement propper return codes
         return ("Success :D", 200)
 
@@ -60,7 +61,6 @@ def create_new_transaction():
 def login():
     username = request.form.get('username')
     password = request.form.get('password')
-    remember = True if request.form.get('remember') else False
 
     with get_explorer() as explorer:
         if not explorer.check_user_existance(username):

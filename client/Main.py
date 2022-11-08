@@ -54,10 +54,14 @@ def post_transaction(name, desc, value, category, user):
         category (string): category of the transaction
         user (string): The loggin user
     """
-    json = {'name': f'{name}', 'description': f'{desc}', 'category': {
-        category}, 'value': f'{value}', 'username': f'{user}'}
+    json = {'name': name,
+            'description': desc,
+            'value': value,
+            'category': category,
+            'username': user}
+
     if name is not None:
-        r = requests.post(POST_URL, json)
+        r = requests.post(url=POST_URL, json=json)
     st.write(r.text)
 
 
@@ -98,9 +102,12 @@ def page_dashboard():
         save = st.button(label="Save")
         if save:
             st.write("Your Transaction will be saved")
-            post_transaction(name, desc, category, value, user)
+            post_transaction(name, desc, value, category, user)
+            st.experimental_rerun()
 
     with col3:
+        if st.button("Reload"):
+            st.experimental_rerun()
         st.write(f"Your past transactions: {count_transactions()}")
         st.table(data)
 

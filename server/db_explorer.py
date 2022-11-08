@@ -25,19 +25,15 @@ class DbExplorer:
     def __exit__(self, exeption_type, exeption_value, traceback):
         self.conn.close()
 
-    def insert_transaction(self,  name, description, category, value, username):
+    def insert_transaction(self, name, description, category, value, username):
         """"inserts new transaction into the Database"""
-
         try:
             cur = self.conn.cursor()
-
             sql = f"""INSERT INTO fintrackschema.transactions  VALUES(DEFAULT,
                         '{name}', '{description}', '{category}', DEFAULT,
                         '{value}','{username}');"""
-
             cur.execute(sql)
             self.conn.commit()
-
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
