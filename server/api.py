@@ -63,10 +63,10 @@ def login():
 
     with get_explorer() as explorer:
         if not explorer.check_user_existance(username):
-            return ("Username or password wrong ")
+            return ("", 401)
         if explorer.check_password(username, password):
-            return("Login Success :D")
-    return ("Username or password wrong ")
+            return("", 200)
+    return ("", 401)
 
 
 @ app.route('/signup', methods=['POST'])
