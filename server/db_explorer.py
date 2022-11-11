@@ -14,7 +14,6 @@ class DbExplorer:
 
         self.conf.read("config.ini")
 
-        print('Connecting to the PostgreSQL database...')
         self.conn = psycopg2.connect(
             host=self.conf.get('Postgres', 'DB_HOST'),
             database=self.conf.get('Postgres', 'DB_NAME'),
@@ -53,7 +52,7 @@ class DbExplorer:
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
-    def get_last_transactions(self, amount=None):
+    def get_last_transactions(self, user, amount=None):
         """Provides the last N Trasnactions form the Database,
             if no number of transactions is given it returns all"""
 
@@ -62,10 +61,12 @@ class DbExplorer:
             sql = None
 
             if amount is not None:
-                sql = f"""select * from fintrackschema.transactions limit
+                sql = f"""select * from fintrackschema.transactions 
+                    where "user" = '{user}' limit
                 {amount};"""
             else:
-                sql = """select * from fintrackschema.transactions;"""
+                sql = f"""select * from fintrackschema.transactions
+                    where "user" = '{user}';"""
 
             cur.execute(sql)
             return cur.fetchall()

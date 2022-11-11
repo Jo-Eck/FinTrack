@@ -20,11 +20,11 @@ def index():
     return ("Whats up?")
 
 
-@app.get('/transactions')
+@app.post('/transactions')
 def get_transactions():
-    """Returns all the transactions in the database"""
+    """Returns all the transactions in the database for a given user"""
     with get_explorer() as explorer:
-        return explorer.get_last_transactions()
+        return explorer.get_last_transactions(request.json["username"])
 
 
 @app.get('/categories')

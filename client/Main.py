@@ -83,7 +83,7 @@ def check_credentials(username, password):
 
 
 def page_dashboard():
-    username = "Jan"
+    transactions = requests.post(API + "/transactions" , json= {"username": st.session_state.user}).json()
     data = pd.DataFrame(
         load_transactions(),
         columns=["Id", "Name", "Desc", "Category", "Date", "Value", "User"])
@@ -98,7 +98,7 @@ def page_dashboard():
         desc = st.text_input(label="Description")
         category = st.text_input(label="Category:")
         value = st.text_input(label="Value:", placeholder="€")
-        user = username
+        user = st.session_state.user
         save = st.button(label="Save")
         if save:
             st.write("Your Transaction will be saved")
