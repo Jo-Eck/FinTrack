@@ -1,48 +1,11 @@
-import streamlit as st
-import requests
 import pandas as pd
+import requests
+import streamlit as st
+
+API = 'http://localhost:8888'
 
 
-LOGIN_URL = 'http://localhost:8888/login'
-GET_URL = 'http://localhost:8888/transactions'
-POST_URL = 'http://localhost:8888/new_transaction'
-
-
-def load_transactions():
-    """
-    makes a get request to fetch all transactions
-
-    Returns:
-        list: list of all transactions
-    """
-    trans = requests.get(GET_URL).json()
-    return trans
-
-
-def count_transactions():
-    """
-    Counts all transactions
-
-    Returns:
-        int: sum of transactions
-    """
-    x = 0
-    for i in load_transactions():
-        x += 1
-    return x
-
-
-def calc_balance(data):
-    """
-    Calculates the balance after all transactions
-    """
-    balance = 0.0
-    for i in data['Value']:
-        balance += i
-    return balance
-
-
-def post_transaction(name, desc, value, category, user):
+def post_transaction(name, desc, value, category):
     """
 
     Sends a post request to the pre-specified URL
@@ -58,10 +21,10 @@ def post_transaction(name, desc, value, category, user):
             'description': desc,
             'value': value,
             'category': category,
-            'username': user}
+            'username': st.session_state["user"]}
 
     if name is not None:
-        r = requests.post(url=POST_URL, json=json)
+        r = requests.post(url=API+"/new_transaction", json=json)
     st.write(r.text)
 
 
@@ -77,20 +40,25 @@ def check_credentials(username, password):
     json = {'username': f'{username}', 'password': f'{password}'}
 
     if username is not None:
-        return requests.post(LOGIN_URL, json).status_code
+        return requests.post(API+"/login", json, timeout=10).status_code
 
     return None
 
 
 def page_dashboard():
-    transactions = requests.post(API + "/transactions" , json= {"username": st.session_state.user}).json()
+    """Dashboard Page"""
+    transactions = requests.post(
+                        API + "/transactions",
+                        json={"username": st.session_state["user"]},
+                        timeout=10
+                    ).json()
     data = pd.DataFrame(
-        load_transactions(),
+        transactions,
         columns=["Id", "Name", "Desc", "Category", "Date", "Value", "User"])
     col1, col2, col3 = st.columns(3)
     with col1:
         st.subheader('Balance')
-        st.write(calc_balance(data))
+        st.write(sum(i[5] for i in transactions))
 
     with col2:
         st.write("Enter a new Transaction:")
@@ -98,21 +66,22 @@ def page_dashboard():
         desc = st.text_input(label="Description")
         category = st.text_input(label="Category:")
         value = st.text_input(label="Value:", placeholder="€")
-        user = st.session_state.user
         save = st.button(label="Save")
         if save:
             st.write("Your Transaction will be saved")
-            post_transaction(name, desc, value, category, user)
+            post_transaction(name, desc, value, category)
             st.experimental_rerun()
 
     with col3:
         if st.button("Reload"):
             st.experimental_rerun()
-        st.write(f"Your past transactions: {count_transactions()}")
+        st.write(
+            f"Your past transactions: {len(transactions)}")
         st.table(data)
 
 
 def page_login():
+    """Login Page"""
     st.title("Login")
     username = st.text_input(label="Username")
     password = st.text_input(label="Password", type="password")
@@ -121,6 +90,7 @@ def page_login():
     if login_btn:
         if (check_credentials(username, password)) == 200:
             st.session_state["auth_status"] = True
+            st.session_state["user"] = username
             st.session_state.runpage = page_dashboard
             st.experimental_rerun()
         else:
