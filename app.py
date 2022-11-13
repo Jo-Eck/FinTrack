@@ -1,13 +1,18 @@
+"""Provides a web-based interface for the user to interact with the API"""
+
+import configparser as cp
+
 import pandas as pd
 import requests
 import streamlit as st
 
-API = 'http://localhost:8888'
+conf = cp.ConfigParser()
+conf.read("config.ini")
+API = f"http://{conf.get('Flask', 'API_HOST')}:{conf.get('Flask', 'API_PORT')}"
 
 
 def post_transaction(name, desc, value, category):
     """
-
     Sends a post request to the pre-specified URL
 
     Param:
@@ -24,8 +29,10 @@ def post_transaction(name, desc, value, category):
             'username': st.session_state["user"]}
 
     if name is not None:
-        r = requests.post(url=API+"/new_transaction", json=json)
-    st.write(r.text)
+        response = requests.post(url=API + "/new_transaction",
+                                 json=json,
+                                 timeout=10)
+    st.write(response.text)
 
 
 def check_credentials(username, password):
@@ -48,10 +55,10 @@ def check_credentials(username, password):
 def page_dashboard():
     """Dashboard Page"""
     transactions = requests.post(
-                        API + "/transactions",
-                        json={"username": st.session_state["user"]},
-                        timeout=10
-                    ).json()
+        API + "/transactions",
+        json={"username": st.session_state["user"]},
+        timeout=10
+    ).json()
     data = pd.DataFrame(
         transactions,
         columns=["Id", "Name", "Desc", "Category", "Date", "Value", "User"])
@@ -61,7 +68,7 @@ def page_dashboard():
         st.session_state["auth_status"] = False
         st.session_state["user"] = None
         st.experimental_rerun()
-    
+
     st.title("Dashboard")
     col1, col2, col3 = st.columns(3)
     with col1:

@@ -1,3 +1,4 @@
+"""Module which enables the api to interface with the Database"""
 import configparser as cp
 from werkzeug.security import check_password_hash
 import psycopg2
@@ -41,14 +42,13 @@ class DbExplorer:
         """Inserts a new kind of category to the Database"""
         try:
             cur = self.conn.cursor()
-
-            sql = f"""INSERT INTO fintrackschema.categories VALUES('{name}',
-            '{description}');"""
+            sql = f"""INSERT INTO fintrackschema.categories 
+                    VALUES('{name}','{description}');"""
 
             cur.execute(sql)
             self.conn.commit()
-
             cur.close()
+
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
@@ -61,7 +61,7 @@ class DbExplorer:
             sql = None
 
             if amount is not None:
-                sql = f"""select * from fintrackschema.transactions 
+                sql = f"""select * from fintrackschema.transactions
                     where "user" = '{user}' limit
                 {amount};"""
             else:
@@ -70,7 +70,6 @@ class DbExplorer:
 
             cur.execute(sql)
             return cur.fetchall()
-
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
             return None
@@ -95,8 +94,8 @@ class DbExplorer:
         try:
             cur = self.conn.cursor()
             sql = """select user_name from fintrackschema.users;"""
-
             cur.execute(sql)
+
             return cur.fetchall()
 
         except (Exception, psycopg2.DatabaseError) as error:
@@ -105,10 +104,11 @@ class DbExplorer:
 
     def check_user_existance(self, username):
         """Checks if useraccount """
+
         try:
             cur = self.conn.cursor()
-            sql = f"""select * from fintrackschema.users WHERE user_name
-            = '{username}' ;"""
+            sql = f"""select * from fintrackschema.users 
+            WHERE user_name = '{username}' ;"""
 
             cur.execute(sql)
             return cur.fetchone() is not None
@@ -135,12 +135,26 @@ class DbExplorer:
 
     def create_user(self, name, password):
         """Creates a new user in the database"""
-        print(len(password))
+
         try:
             cur = self.conn.cursor()
-
             sql = f"""INSERT INTO fintrackschema.users
             VALUES('{name}','{password}');"""
+
+            cur.execute(sql)
+            self.conn.commit()
+            cur.close()
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+
+    def delete_transaction(self, id):
+        """Deletes a transaction from the database"""
+
+        try:
+            cur = self.conn.cursor()
+            sql = f"""delete from fintrackschema.transactions 
+                    where transaction_id = {id};"""
 
             cur.execute(sql)
             self.conn.commit()
@@ -148,3 +162,18 @@ class DbExplorer:
             cur.close()
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
+
+    def get_user_balance(self, user):
+        """Provides the balance of a given user"""
+        try:
+            cur = self.conn.cursor()
+
+            sql = f"""select sum(value) from fintrackschema.transactions
+            where "user" = '{user}';"""
+
+            cur.execute(sql)
+            return cur.fetchone()[0]
+
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+            return None

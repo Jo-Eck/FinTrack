@@ -1,7 +1,11 @@
+"""Provides a Flask-API for the database"""
+
 import configparser as cp
+
+from flask import Flask, request
 from werkzeug.security import generate_password_hash
+
 import db_explorer
-from flask import (Flask, request)
 
 app = Flask(__name__)
 
@@ -17,7 +21,7 @@ def get_explorer():
 @app.route('/')
 def index():
     """Front Page"""
-    return ("Whats up?")
+    return "Whats up?"
 
 
 @app.post('/transactions')
@@ -57,8 +61,18 @@ def create_new_transaction():
         return ("Success :D", 200)
 
 
+@app.post('/delete_transaction')
+def delete_transaction():
+    """Deletes a transaction from the database"""
+    json = request.json
+    with get_explorer() as explorer:
+        explorer.delete_transaction(json["id"])
+        return ("Success :D", 200)
+
+
 @app.post('/login')
 def login():
+    """Checks if a specific username and password combination exists """
     username = request.form.get('username')
     password = request.form.get('password')
 
@@ -85,13 +99,7 @@ def signup_post():
         # TODO implemnt proper return codes
 
 
-@ app.route('/logout')
-def logout():
-    return 'Logout'
-
-
 if __name__ == '__main__':
-    print(conf.get('Flask', 'API_PORT'))
     app.run(
         conf.get('Flask', 'API_HOST'),
         conf.get('Flask', 'API_PORT'),
