@@ -55,6 +55,14 @@ def page_dashboard():
     data = pd.DataFrame(
         transactions,
         columns=["Id", "Name", "Desc", "Category", "Date", "Value", "User"])
+
+    if st.button(label="Logout"):
+        st.session_state.runpage = page_login
+        st.session_state["auth_status"] = False
+        st.session_state["user"] = None
+        st.experimental_rerun()
+    
+    st.title("Dashboard")
     col1, col2, col3 = st.columns(3)
     with col1:
         st.subheader('Balance')
@@ -103,7 +111,31 @@ def page_login():
 
 
 def page_registration():
+    """Registration Page"""
     st.title("Registration")
+    username = st.text_input(label="Username")
+    password = st.text_input(label="Password", type="password")
+    password2 = st.text_input(label="Repeat Password", type="password")
+    register_btn = st.button(label="Register")
+
+    if register_btn:
+        if password == password2:
+            st.session_state["auth_status"] = True
+            requests.post(
+                API + "/register",
+                json={"username": username, "password": password},
+                timeout=10
+            )
+            st.session_state["user"] = username
+            st.session_state.runpage = page_dashboard
+            st.experimental_rerun()
+        else:
+            st.session_state["auth_status"] = False
+            st.warning("Passwords do not match!")
+
+    if st.button(label="You already have an account?"):
+        st.session_state.runpage = page_login
+        st.experimental_rerun()
 
 
 if 'runpage' not in st.session_state:

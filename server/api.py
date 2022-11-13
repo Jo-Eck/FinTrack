@@ -70,14 +70,14 @@ def login():
     return ("", 401)
 
 
-@ app.route('/signup', methods=['POST'])
+@app.route('/register', methods=['POST'])
 def signup_post():
-
-    username = request.form.get("username")
-    password = generate_password_hash(request.form.get("password"))
+    """Creates a new user in the database"""
+    json = request.json
+    username = json["username"]
+    password = generate_password_hash(json["password"])
 
     with get_explorer() as explorer:
-
         if explorer.check_user_existance(username):
             return "Username already taken"
         explorer.create_user(username, password)
