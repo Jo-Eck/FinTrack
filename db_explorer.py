@@ -35,7 +35,7 @@ class DbExplorer:
             cur.execute(sql)
             self.conn.commit()
             cur.close()
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (psycopg2.DatabaseError) as error:
             print(error)
 
     def insert_category(self, name, description):
@@ -49,7 +49,7 @@ class DbExplorer:
             self.conn.commit()
             cur.close()
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (psycopg2.DatabaseError) as error:
             print(error)
 
     def get_last_transactions(self, user, amount=None):
@@ -88,7 +88,7 @@ class DbExplorer:
 
             cur.execute(sql)
             return cur.fetchall()
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (psycopg2.DatabaseError) as error:
             print(error)
             return None
 
@@ -102,7 +102,7 @@ class DbExplorer:
             cur.execute(sql)
             return cur.fetchall()
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (psycopg2.DatabaseError) as error:
             print(error)
             return None
 
@@ -116,7 +116,7 @@ class DbExplorer:
 
             return cur.fetchall()
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (psycopg2.DatabaseError) as error:
             print(error)
             return None
 
@@ -131,7 +131,7 @@ class DbExplorer:
             cur.execute(sql)
             return cur.fetchone() is not None
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (psycopg2.DatabaseError) as error:
             print(error)
             return None
 
@@ -147,7 +147,7 @@ class DbExplorer:
 
             return check_password_hash(cur.fetchone()[0], password)
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (psycopg2.DatabaseError) as error:
             print(error)
             return None
 
@@ -163,7 +163,7 @@ class DbExplorer:
             self.conn.commit()
             cur.close()
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (psycopg2.DatabaseError) as error:
             print(error)
 
     def delete_transaction(self, transaction_id):
@@ -178,7 +178,7 @@ class DbExplorer:
             self.conn.commit()
 
             cur.close()
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (psycopg2.DatabaseError) as error:
             print(error)
 
     def get_user_balance(self, user):
@@ -192,6 +192,6 @@ class DbExplorer:
             cur.execute(sql)
             return cur.fetchone()[0]
 
-        except (Exception, psycopg2.DatabaseError) as error:
+        except (psycopg2.DatabaseError) as error:
             print(error)
             return None
