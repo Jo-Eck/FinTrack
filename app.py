@@ -1,7 +1,6 @@
 """Provides a web-based interface for the user to interact with the API"""
 
 import configparser as cp
-
 import pandas as pd
 import requests
 import streamlit as st
@@ -59,9 +58,9 @@ def page_dashboard():
         json={"username": st.session_state["user"]},
         timeout=10
     ).json()
-    data = pd.DataFrame(
+    transaction_table = pd.DataFrame(
         transactions,
-        columns=["Id", "Name", "Desc", "Category", "Date", "Value", "User"])
+        columns=["Name", "Desc", "Category", "Date", "Value"])
 
     if st.button(label="Logout"):
         st.session_state.runpage = page_login
@@ -73,7 +72,7 @@ def page_dashboard():
     col1, col2, col3 = st.columns(3)
     with col1:
         st.subheader('Balance')
-        st.write(sum(i[5] for i in transactions))
+        st.write(sum(i[4] for i in transactions))
 
     with col2:
         st.write("Enter a new Transaction:")
@@ -92,7 +91,7 @@ def page_dashboard():
             st.experimental_rerun()
         st.write(
             f"Your past transactions: {len(transactions)}")
-        st.table(data)
+        st.table(transaction_table)
 
 
 def page_login():

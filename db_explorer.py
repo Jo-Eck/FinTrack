@@ -42,7 +42,7 @@ class DbExplorer:
         """Inserts a new kind of category to the Database"""
         try:
             cur = self.conn.cursor()
-            sql = f"""INSERT INTO fintrackschema.categories 
+            sql = f"""INSERT INTO fintrackschema.categories
                     VALUES('{name}','{description}');"""
 
             cur.execute(sql)
@@ -61,11 +61,29 @@ class DbExplorer:
             sql = None
 
             if amount is not None:
-                sql = f"""select * from fintrackschema.transactions
-                    where "user" = '{user}' limit
-                {amount};"""
+                sql = f"""select
+                    transaction_name,
+                    transaction_description,
+                    transaction_category,
+                    TO_CHAR(
+                        timestamp,
+                        'HH24:MI DD.MM.YY'
+                    ),
+                    betrag
+                    from fintrackschema.transactions
+                    where "user" = '{user}'
+                    limit{amount};"""
             else:
-                sql = f"""select * from fintrackschema.transactions
+                sql = f"""select
+                    transaction_name,
+                    transaction_description,
+                    transaction_category,
+                    TO_CHAR(
+                        timestamp,
+                        'HH24:MI DD.MM.YY'
+                    ),
+                    betrag
+                    from fintrackschema.transactions
                     where "user" = '{user}';"""
 
             cur.execute(sql)
@@ -107,7 +125,7 @@ class DbExplorer:
 
         try:
             cur = self.conn.cursor()
-            sql = f"""select * from fintrackschema.users 
+            sql = f"""select * from fintrackschema.users
             WHERE user_name = '{username}' ;"""
 
             cur.execute(sql)
@@ -148,13 +166,13 @@ class DbExplorer:
         except (Exception, psycopg2.DatabaseError) as error:
             print(error)
 
-    def delete_transaction(self, id):
+    def delete_transaction(self, transaction_id):
         """Deletes a transaction from the database"""
 
         try:
             cur = self.conn.cursor()
-            sql = f"""delete from fintrackschema.transactions 
-                    where transaction_id = {id};"""
+            sql = f"""delete from fintrackschema.transactions
+                    where transaction_id = {transaction_id};"""
 
             cur.execute(sql)
             self.conn.commit()

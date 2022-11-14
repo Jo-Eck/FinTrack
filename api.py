@@ -1,7 +1,6 @@
 """Provides a Flask-API for the database"""
 
 import configparser as cp
-
 from flask import Flask, request
 from werkzeug.security import generate_password_hash
 
