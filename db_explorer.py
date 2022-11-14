@@ -125,7 +125,7 @@ class DbExplorer:
             print(error)
             return None
 
-    def check_user_existance(self, username):
+    def check_user_existence(self, username):
         """Checks if useraccount """
 
         try:

@@ -1,12 +1,15 @@
 """Provides a Flask-API for the database"""
 
 import configparser as cp
+
 from flask import Flask, request
+from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash
 
 import db_explorer
 
 app = Flask(__name__)
+auth = HTTPBasicAuth()
 
 conf = cp.ConfigParser()
 conf.read("config.ini")
@@ -18,33 +21,22 @@ def get_explorer():
 
 
 @app.route('/')
+@auth.login_required
 def index():
     """Front Page"""
     return "Whats up?"
 
 
 @app.post('/transactions')
+@auth.login_required
 def get_transactions():
     """Returns all the transactions in the database for a given user"""
     with get_explorer() as explorer:
         return explorer.get_last_transactions(request.json["username"])
 
 
-@app.get('/categories')
-def get_categories():
-    """Returns all the categories"""
-    with get_explorer() as explorer:
-        return explorer.get_categories()
-
-
-@app.get('/users')
-def get_users():
-    """Returns all the usernames"""
-    with get_explorer() as explorer:
-        return explorer.get_users()
-
-
 @app.post('/new_transaction')
+@auth.login_required
 def create_new_transaction():
     """Calls for a new Trasnaction to be inserted into the Database with the
     recieved Jsons"""
@@ -60,12 +52,29 @@ def create_new_transaction():
 
 
 @app.post('/delete_transaction')
+@auth.login_required
 def delete_transaction():
     """Deletes a transaction from the database"""
     json = request.json
     with get_explorer() as explorer:
         explorer.delete_transaction(json["id"])
         return ("Success :D", 200)
+
+
+@app.get('/categories')
+@auth.login_required
+def get_categories():
+    """Returns all the categories"""
+    with get_explorer() as explorer:
+        return explorer.get_categories()
+
+
+@app.get('/users')
+@auth.login_required
+def get_users():
+    """Returns all the usernames"""
+    with get_explorer() as explorer:
+        return explorer.get_users()
 
 
 @app.post('/login')
@@ -75,7 +84,7 @@ def login():
     password = request.form.get('password')
 
     with get_explorer() as explorer:
-        if not explorer.check_user_existance(username):
+        if not explorer.check_user_existence(username):
             return ("", 401)
         if explorer.check_password(username, password):
             return ("", 200)
@@ -90,7 +99,7 @@ def signup_post():
     password = generate_password_hash(json["password"])
     try:
         with get_explorer() as explorer:
-            if explorer.check_user_existance(username):
+            if explorer.check_user_existence(username):
                 return "Username already taken"
             explorer.create_user(username, password)
             return "User created", 200
@@ -98,8 +107,19 @@ def signup_post():
         return "Missing parameters", 400
 
 
+@auth.verify_password
+def verify_password(username, password):
+    """Checks if a username and password combination exists"""
+    with get_explorer() as explorer:
+        if (explorer.check_password(username, password)
+                and explorer.check_user_existence(username)):
+            return username
+    return None
+
+
 if __name__ == '__main__':
     app.run(
         conf.get('Flask', 'API_HOST'),
         conf.get('Flask', 'API_PORT'),
-        conf.get('Flask', 'API_DEBUG'),)
+        conf.get('Flask', 'API_DEBUG'),
+        )

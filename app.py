@@ -28,27 +28,14 @@ def post_transaction(name, desc, value, category):
             'username': st.session_state["user"]}
 
     if name is not None:
-        response = requests.post(url=API + "/new_transaction",
-                                 json=json,
-                                 timeout=10)
+        response = requests.post(
+            url=API + "/new_transaction",
+            json=json,
+            auth=(
+                st.session_state["user"],
+                st.session_state["password"]),
+            timeout=10)
     st.write(response.text)
-
-
-def check_credentials(username, password):
-    """
-    Sends a post request to the pre-specified URL
-    * logs in user if username + password are correct
-
-    Param:
-        username (string): Name of user
-        password (string): Password of user
-    """
-    json = {'username': f'{username}', 'password': f'{password}'}
-
-    if username is not None:
-        return requests.post(API+"/login", json, timeout=10).status_code
-
-    return None
 
 
 def page_dashboard():
@@ -56,8 +43,12 @@ def page_dashboard():
     transactions = requests.post(
         API + "/transactions",
         json={"username": st.session_state["user"]},
-        timeout=10
+        auth=(
+                st.session_state["user"],
+                st.session_state["password"]),
+        timeout=10,
     ).json()
+
     transaction_table = pd.DataFrame(
         transactions,
         columns=["Name", "Desc", "Category", "Date", "Value"])
@@ -66,6 +57,7 @@ def page_dashboard():
         st.session_state.runpage = page_login
         st.session_state["auth_status"] = False
         st.session_state["user"] = None
+        st.session_state["password"] = None
         st.experimental_rerun()
 
     st.title("Dashboard")
@@ -102,9 +94,17 @@ def page_login():
     login_btn = st.button(label="Login")
 
     if login_btn:
-        if (check_credentials(username, password)) == 200:
+        if (
+            requests.post(
+                API+"/login",
+                {"username": username, "password": password},
+                timeout=10
+            ).status_code
+        ) == 200:
+
             st.session_state["auth_status"] = True
             st.session_state["user"] = username
+            st.session_state["password"] = password
             st.session_state.runpage = page_dashboard
             st.experimental_rerun()
         else:
@@ -133,6 +133,7 @@ def page_registration():
                 timeout=10
             )
             st.session_state["user"] = username
+            st.session_state["password"] = password
             st.session_state.runpage = page_dashboard
             st.experimental_rerun()
         else:
