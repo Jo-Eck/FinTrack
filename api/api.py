@@ -1,18 +1,14 @@
 """Provides a Flask-API for the database"""
 
-import configparser as cp
-
 from flask import Flask, request
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash
 
 import db_explorer
+import os
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
-
-conf = cp.ConfigParser()
-conf.read("config.ini")
 
 
 def get_explorer():
@@ -21,7 +17,6 @@ def get_explorer():
 
 
 @app.route('/')
-@auth.login_required
 def index():
     """Front Page"""
     return "Whats up?"
@@ -99,7 +94,7 @@ def signup_post():
     password = generate_password_hash(json["password"])
     try:
         with get_explorer() as explorer:
-            if explorer.check_user_existence(username):
+            if explorer.check_user_existence(username): 
                 return "Username already taken"
             explorer.create_user(username, password)
             return "User created", 200
@@ -119,7 +114,7 @@ def verify_password(username, password):
 
 if __name__ == '__main__':
     app.run(
-        conf.get('Flask', 'API_HOST'),
-        conf.get('Flask', 'API_PORT'),
-        conf.get('Flask', 'API_DEBUG'),
+        os.getenv("API_HOST"),
+        os.getenv("API_PORT"),
+        os.getenv("API_Debug")
         )

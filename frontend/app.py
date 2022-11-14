@@ -1,13 +1,12 @@
 """Provides a web-based interface for the user to interact with the API"""
-
-import configparser as cp
+import os
 import pandas as pd
 import requests
 import streamlit as st
 
-conf = cp.ConfigParser()
-conf.read("config.ini")
-API = f"http://{conf.get('Flask', 'API_HOST')}:{conf.get('Flask', 'API_PORT')}"
+
+API_HOST = os.getenv("API_HOST")
+API_PORT = os.getenv("API_PORT")
 
 
 def post_transaction(name, desc, value, category):
@@ -29,7 +28,7 @@ def post_transaction(name, desc, value, category):
 
     if name is not None:
         response = requests.post(
-            url=API + "/new_transaction",
+            url=f"http://{API_HOST}:{API_PORT}/new_transaction",
             json=json,
             auth=(
                 st.session_state["user"],
@@ -41,7 +40,7 @@ def post_transaction(name, desc, value, category):
 def page_dashboard():
     """Dashboard Page"""
     transactions = requests.post(
-        API + "/transactions",
+        url=f"http://{API_HOST}:{API_PORT}/transactions",
         json={"username": st.session_state["user"]},
         auth=(
                 st.session_state["user"],
@@ -96,8 +95,8 @@ def page_login():
     if login_btn:
         if (
             requests.post(
-                API+"/login",
-                {"username": username, "password": password},
+                url=f"http://{API_HOST}:{API_PORT}/login",
+                json={"username": username, "password": password},
                 timeout=10
             ).status_code
         ) == 200:
@@ -128,7 +127,7 @@ def page_registration():
         if password == password2:
             st.session_state["auth_status"] = True
             requests.post(
-                API + "/register",
+                url=f"http://{API_HOST}:{API_PORT}/register",
                 json={"username": username, "password": password},
                 timeout=10
             )

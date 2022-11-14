@@ -1,5 +1,5 @@
 """Module which enables the api to interface with the Database"""
-import configparser as cp
+import os
 from werkzeug.security import check_password_hash
 import psycopg2
 
@@ -8,18 +8,15 @@ class DbExplorer:
     """Class to interface with the Database"""
 
     def __init__(self):
-        self.conf = cp.ConfigParser()
         self.conn = None
 
     def __enter__(self):
 
-        self.conf.read("config.ini")
-
         self.conn = psycopg2.connect(
-            host=self.conf.get('Postgres', 'DB_HOST'),
-            database=self.conf.get('Postgres', 'DB_NAME'),
-            user=self.conf.get('Postgres', 'DB_USER'),
-            password=self.conf.get('Postgres', 'DB_PASSWORD'))
+            host=os.getenv("DB_HOST"),
+            database=os.getenv("DB_NAME"),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"))
         return self
 
     def __exit__(self, exeption_type, exeption_value, traceback):
