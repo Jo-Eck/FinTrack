@@ -49,15 +49,13 @@ def create_new_transaction():
     """Calls for a new Trasnaction to be inserted into the Database with the
     recieved Jsons"""
     json = request.json
-    with get_explorer() as explorer:
-        explorer.insert_transaction(
-            json["name"],
-            json["description"],
-            json["category"],
-            json["value"],
-            json["username"])
-# TODO implement propper return codes
-        return ("Success :D", 200)
+
+    try:
+        with get_explorer() as explorer:
+            explorer.insert_transaction(json)
+    except KeyError:
+        return "Missing parameters", 400
+    return "Transaction inserted", 200
 
 
 @app.post('/delete_transaction')
@@ -89,13 +87,14 @@ def signup_post():
     json = request.json
     username = json["username"]
     password = generate_password_hash(json["password"])
-
-    with get_explorer() as explorer:
-        if explorer.check_user_existance(username):
-            return "Username already taken"
-        explorer.create_user(username, password)
-        return ("Success :D", 200)
-        # TODO implemnt proper return codes
+    try:
+        with get_explorer() as explorer:
+            if explorer.check_user_existance(username):
+                return "Username already taken"
+            explorer.create_user(username, password)
+            return "User created", 200
+    except KeyError:
+        return "Missing parameters", 400
 
 
 if __name__ == '__main__':

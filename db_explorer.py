@@ -25,13 +25,18 @@ class DbExplorer:
     def __exit__(self, exeption_type, exeption_value, traceback):
         self.conn.close()
 
-    def insert_transaction(self, name, description, category, value, username):
+    def insert_transaction(self, transaction_params):
         """"inserts new transaction into the Database"""
         try:
             cur = self.conn.cursor()
             sql = f"""INSERT INTO fintrackschema.transactions  VALUES(DEFAULT,
-                        '{name}', '{description}', '{category}', DEFAULT,
-                        '{value}','{username}');"""
+                        '{transaction_params["name"]}',
+                        '{transaction_params["description"]}',
+                        '{transaction_params["category"]}',
+                        DEFAULT,
+                        '{transaction_params["value"]}',
+                        '{transaction_params["username"]}'
+                    );"""
             cur.execute(sql)
             self.conn.commit()
             cur.close()
