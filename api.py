@@ -49,9 +49,10 @@ def create_new_transaction():
     """Calls for a new Trasnaction to be inserted into the Database with the
     recieved Jsons"""
     json = request.json
-
     try:
         with get_explorer() as explorer:
+            if json["category"] not in get_categories():
+                explorer.create_category(json["category"], "")
             explorer.insert_transaction(json)
     except KeyError:
         return "Missing parameters", 400

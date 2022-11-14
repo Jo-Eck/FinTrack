@@ -43,7 +43,7 @@ class DbExplorer:
         except (psycopg2.DatabaseError) as error:
             print(error)
 
-    def insert_category(self, name, description):
+    def create_category(self, name, description):
         """Inserts a new kind of category to the Database"""
         try:
             cur = self.conn.cursor()
