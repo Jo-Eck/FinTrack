@@ -12,14 +12,14 @@ API = f"http://{conf.get('Flask', 'API_HOST')}:{conf.get('Flask', 'API_PORT')}"
 
 def post_transaction(name, desc, value, category):
     """
-    Sends a post request to the pre-specified URL
-
+    Sends a post request to the pre-specified URL    Test:
+    >>> post_transaction('Einkaufen', 'Shopping', '-35', 'Lebensmittel')
+    ""
     Param:
         name (string): Name of the transaction
         desc (string): Descripton for the transaction
         value (float): The monitary value
         category (string): category of the transaction
-        user (string): The loggin user
     """
     json = {'name': name,
             'description': desc,
