@@ -5,7 +5,9 @@ import psycopg2
 
 
 class DbExplorer:
-    """Class to interface with the Database"""
+    """
+    Class to interface with the Database
+    """
 
     def __init__(self):
         self.conn = None
@@ -23,7 +25,11 @@ class DbExplorer:
         self.conn.close()
 
     def insert_transaction(self, transaction_params):
-        """"inserts new transaction into the Database"""
+        """
+        inserts new transaction into the Database
+        >>> insert_transaction()
+        ""
+        """
         try:
             cur = self.conn.cursor()
             sql = f"""INSERT INTO fintrackschema.transactions  VALUES(DEFAULT,
@@ -41,7 +47,11 @@ class DbExplorer:
             print(error)
 
     def create_category(self, name, description):
-        """Inserts a new kind of category to the Database"""
+        """
+        Inserts a new kind of category to the Database
+        >>> create_category()
+        ""
+        """
         try:
             cur = self.conn.cursor()
             sql = f"""INSERT INTO fintrackschema.categories
@@ -55,8 +65,12 @@ class DbExplorer:
             print(error)
 
     def get_last_transactions(self, user, amount=None):
-        """Provides the last N Trasnactions form the Database,
-            if no number of transactions is given it returns all"""
+        """
+        Provides the last N Trasnactions form the Database,
+        if no number of transactions is given it returns all
+        >>> get_last_transactions()
+        ""
+        """
 
         try:
             cur = self.conn.cursor()
@@ -95,7 +109,11 @@ class DbExplorer:
             return None
 
     def get_categories(self):
-        """Provides all categories from the database"""
+        """
+        Provides all categories from the database
+        >>> get_categories()
+        ""
+        """
 
         try:
             cur = self.conn.cursor()
@@ -109,7 +127,11 @@ class DbExplorer:
             return None
 
     def get_users(self):
-        """Provides all usernames from the database"""
+        """
+        Provides all usernames from the database
+        >>> get_users()
+        ""
+        """
 
         try:
             cur = self.conn.cursor()
@@ -123,7 +145,11 @@ class DbExplorer:
             return None
 
     def check_user_existence(self, username):
-        """Checks if useraccount """
+        """
+        Checks if useraccount
+        >>> check_user_existence()
+        ""
+        """
 
         try:
             cur = self.conn.cursor()
@@ -138,7 +164,11 @@ class DbExplorer:
             return None
 
     def check_password(self, username, password):
-        """Compares a provided password with the password of a given user"""
+        """
+        Compares a provided password with the password of a given user
+        >>> check_password()
+        ""
+        """
 
         try:
             cur = self.conn.cursor()
@@ -154,7 +184,11 @@ class DbExplorer:
             return None
 
     def create_user(self, name, password):
-        """Creates a new user in the database"""
+        """
+        Creates a new user in the database
+        >>> create_user()
+        ""
+        """
 
         try:
             cur = self.conn.cursor()
@@ -169,7 +203,11 @@ class DbExplorer:
             print(error)
 
     def delete_transaction(self, transaction_id):
-        """Deletes a transaction from the database"""
+        """
+        Deletes a transaction from the database
+        >>> delete_transaction()
+        ""
+        """
 
         try:
             cur = self.conn.cursor()
@@ -184,7 +222,11 @@ class DbExplorer:
             print(error)
 
     def get_user_balance(self, user):
-        """Provides the balance of a given user"""
+        """
+        Provides the balance of a given user
+        >>> get_user_balance()
+        ""
+        """
         try:
             cur = self.conn.cursor()
 

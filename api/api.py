@@ -18,14 +18,22 @@ def get_explorer():
 
 @app.route('/')
 def index():
-    """Front Page"""
+    """
+    Front Page
+    >>> index()
+    "Whats up?"
+    """
     return "Whats up?"
 
 
 @app.post('/transactions')
 @auth.login_required
 def get_transactions():
-    """Returns all the transactions in the database for a given user"""
+    """
+    Returns all the transactions in the database for a given user
+    >>> get_transaction()
+    ""
+    """
     with get_explorer() as explorer:
         return explorer.get_last_transactions(request.json["username"])
 
@@ -33,8 +41,12 @@ def get_transactions():
 @app.post('/new_transaction')
 @auth.login_required
 def create_new_transaction():
-    """Calls for a new Trasnaction to be inserted into the Database with the
-    recieved Jsons"""
+    """
+    Calls for a new Trasnaction to be inserted into the Database with the
+    recieved Jsons
+    >>> create_new_transaction()
+    "Transaction inserted", 200
+    """
     json = request.json
     try:
         with get_explorer() as explorer:
@@ -49,17 +61,25 @@ def create_new_transaction():
 @app.post('/delete_transaction')
 @auth.login_required
 def delete_transaction():
-    """Deletes a transaction from the database"""
+    """
+    Deletes a transaction from the database
+    >>> delete_transaction()
+    ""
+    """
     json = request.json
     with get_explorer() as explorer:
         explorer.delete_transaction(json["id"])
-        return ("Success :D", 200)
+        return ("Success", 200)
 
 
 @app.get('/categories')
 @auth.login_required
 def get_categories():
-    """Returns all the categories"""
+    """
+    Returns all the categories
+    >>> get_categories()
+    "Entertainment, Lebensmittel"
+    """
     with get_explorer() as explorer:
         return explorer.get_categories()
 
@@ -67,14 +87,22 @@ def get_categories():
 @app.get('/users')
 @auth.login_required
 def get_users():
-    """Returns all the usernames"""
+    """
+    Returns all the usernames
+    >>> get_users()
+    ""
+    """
     with get_explorer() as explorer:
         return explorer.get_users()
 
 
 @app.post('/login')
 def login():
-    """Checks if a specific username and password combination exists """
+    """
+    Checks if a specific username and password combination exists 
+    >>> login()
+    ""
+    """
     username = request.form.get('username')
     password = request.form.get('password')
 
@@ -88,7 +116,11 @@ def login():
 
 @app.route('/register', methods=['POST'])
 def signup_post():
-    """Creates a new user in the database"""
+    """
+    Creates a new user in the database
+    >>> signup_post()
+    ""
+    """
     json = request.json
     username = json["username"]
     password = generate_password_hash(json["password"])
@@ -104,7 +136,11 @@ def signup_post():
 
 @auth.verify_password
 def verify_password(username, password):
-    """Checks if a username and password combination exists"""
+    """
+    Checks if a username and password combination exists
+    >>> verify_password('Jin', '1234')
+    Jin
+    """
     with get_explorer() as explorer:
         if (explorer.check_password(username, password)
                 and explorer.check_user_existence(username)):

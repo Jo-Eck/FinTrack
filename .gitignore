@@ -2,6 +2,4 @@ venv
 __pycache__
 server/config.ini
 .vscode/settings.json
-server/config.ini
-api/requirements_api.txt
-frontend/requirements_frontend.txt
+config.ini
