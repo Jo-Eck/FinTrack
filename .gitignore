@@ -2,4 +2,4 @@ venv
 __pycache__
 server/config.ini
 .vscode/settings.json
-server/config.ini
+config.ini
