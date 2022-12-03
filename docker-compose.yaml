@@ -1,20 +1,26 @@
 version: "3.9"
 services:
   db:
-    build: database/db.Dockerfile
+    build: 
+      context: ./database/
+      dockerfile: db.Dockerfile
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
       - backend
 
   api:
-    build: api/api.Dockerfile
+    build: 
+      context: ./api/
+      dockerfile: api.Dockerfile
     networks:
       - frontend
       - backend
 
   frontend:
-    build: frontend/frontend.Dockerfile
+    build: 
+      context: frontend/
+      dockerfile: frontend.Dockerfile
     ports:
       - "8888:8888"
     stop_grace_period: 1m30s
