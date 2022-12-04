@@ -1,11 +1,11 @@
 """Provides a Flask-API for the database"""
+import os
+import db_explorer
 
 from flask import Flask, request
 from flask_httpauth import HTTPBasicAuth
 from werkzeug.security import generate_password_hash
 
-import db_explorer
-import os
 
 app = Flask(__name__)
 auth = HTTPBasicAuth()
@@ -105,7 +105,7 @@ def get_users():
 @app.post('/login')
 def login():
     """
-    Checks if a specific username and password combination exists 
+    Checks if a specific username and password combination exists
     >>> login()
     Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
     ""
@@ -134,7 +134,7 @@ def signup_post():
     password = generate_password_hash(json["password"])
     try:
         with get_explorer() as explorer:
-            if explorer.check_user_existence(username): 
+            if explorer.check_user_existence(username):
                 return "Username already taken"
             explorer.create_user(username, password)
             return "User created", 200
@@ -162,4 +162,4 @@ if __name__ == '__main__':
         os.getenv("API_HOST"),
         os.getenv("API_PORT"),
         os.getenv("API_Debug")
-        )
+    )

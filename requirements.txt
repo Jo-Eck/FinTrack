@@ -1,0 +1,7 @@
+#file is used in pylint-check
+pandas
+streamlit
+werkzeug
+psycopg2
+flask
+flask_httpauth

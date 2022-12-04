@@ -43,8 +43,8 @@ def page_dashboard():
         url=f"http://{API_HOST}:{API_PORT}/transactions",
         json={"username": st.session_state["user"]},
         auth=(
-                st.session_state["user"],
-                st.session_state["password"]),
+            st.session_state["user"],
+            st.session_state["password"]),
         timeout=10,
     ).json()
 

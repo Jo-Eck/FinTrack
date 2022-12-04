@@ -1,0 +1,4 @@
+werkzeug
+psycopg2
+flask
+flask_httpauth
