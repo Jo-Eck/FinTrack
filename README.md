@@ -2,7 +2,8 @@ FinTrack
 
 ## Welcome to the FinTrack ReadMe!
 This project is a simple web-application for tracking your personal finances. It is a work in progress and is not yet ready for production. <br>
-It was created as as part of joined university project for the course "Implementations" at the Cooperative State University Baden-Württemberg (DHBW). <br> <br>
+It was created as as part of joined university project for the course "Implementations" at the Cooperative State University Baden-Württemberg (DHBW). <br> 
+<br>
 The project is written in Python and uses the Streamlit framework for the frontend and Flask for the backend. The Database is a PostgreSQL-DB.
 
 
@@ -47,3 +48,5 @@ This project is the result of a joint project by the following students:
 - Jan Roederer
 - Jon Eckerth
 - Kilian Seelbach
+
+This code can also be found on GitHub: https://github.com/Jo-Eck/FinTrack 
