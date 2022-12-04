@@ -21,10 +21,10 @@ The application will be available at http://localhost:8501
 ### Quickstart without Docker:
 Alternatively, you can run the application without Docker, which is useful for development purposes, but not necessarily recommended.
 
-Make sure you've installed Python 3.10 and PostgreSQL (and pg4, which is an install-option and a Database-frontend for PGSQL).<br>
+Make sure you've installed Python 3.10 and PostgreSQL (and pgAdmin, which is an install-option and a Database-frontend for PGSQL).<br>
 To install Python, follow the instructions on the official Python website: https://www.python.org/downloads/
 To install PostgreSQL, follow the instructions on the official PostgreSQL website: https://www.postgresql.org/download/
-To install pg4, follow the instructions on the official pg4 website: https://www.pg4.com/download/
+To install pg4, follow the instructions on the official pgAdmin website: https://www.pgadmin.org/download/
 
 Before you can run the application, you need to create a database and a user for the application.
 To do so, run the following commands in the PostgreSQL shell:
