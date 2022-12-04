@@ -22,6 +22,7 @@ def index():
     Front Page
     >>> index()
     "Whats up?"
+    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
     """
     return "Whats up?"
 
@@ -32,6 +33,7 @@ def get_transactions():
     """
     Returns all the transactions in the database for a given user
     >>> get_transaction()
+    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
     ""
     """
     with get_explorer() as explorer:
@@ -46,6 +48,7 @@ def create_new_transaction():
     recieved Jsons
     >>> create_new_transaction()
     "Transaction inserted", 200
+    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
     """
     json = request.json
     try:
@@ -64,6 +67,7 @@ def delete_transaction():
     """
     Deletes a transaction from the database
     >>> delete_transaction()
+    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
     ""
     """
     json = request.json
@@ -79,6 +83,7 @@ def get_categories():
     Returns all the categories
     >>> get_categories()
     "Entertainment, Lebensmittel"
+    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
     """
     with get_explorer() as explorer:
         return explorer.get_categories()
@@ -90,6 +95,7 @@ def get_users():
     """
     Returns all the usernames
     >>> get_users()
+    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
     ""
     """
     with get_explorer() as explorer:
@@ -101,6 +107,7 @@ def login():
     """
     Checks if a specific username and password combination exists 
     >>> login()
+    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
     ""
     """
     username = request.form.get('username')
@@ -120,6 +127,7 @@ def signup_post():
     Creates a new user in the database
     >>> signup_post()
     ""
+    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
     """
     json = request.json
     username = json["username"]
@@ -140,6 +148,7 @@ def verify_password(username, password):
     Checks if a username and password combination exists
     >>> verify_password('Jin', '1234')
     Jin
+    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
     """
     with get_explorer() as explorer:
         if (explorer.check_password(username, password)
