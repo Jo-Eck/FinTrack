@@ -2,28 +2,50 @@ version: "3.9"
 services:
   db:
     build: 
-      context: ./database/
-      dockerfile: db.Dockerfile
+      context: ./database
+      dockerfile: ./db.Dockerfile
     volumes:
       - db-data:/var/lib/postgresql/data
     networks:
       - backend
+    environment:
+      - POSTGRES_PASSWORD=myPassword
+      - POSTGRES_DB=FinTrack
 
   api:
     build: 
-      context: ./api/
-      dockerfile: api.Dockerfile
+      context: ./api
+      dockerfile: ./api.Dockerfile
+    depends_on:
+      - db
     networks:
       - frontend
       - backend
+    ports:
+      - '8888:8888'
+    environment:
+      - DB_HOST=fintrack_db_1
+      - DB_Name=FinTrack
+      - DB_USER=postgres
+      - DB_PASSWORD=myPassword
+      - API_DEBUG=True
+      - API_HOST=fintrack_api_1
+      - API_PORT=8888
 
   frontend:
     build: 
-      context: frontend/
-      dockerfile: frontend.Dockerfile
+      context: ./frontend
+      dockerfile: ./frontend.Dockerfile
+    depends_on:
+      - api
     ports:
-      - "8888:8888"
+      - "8501:8501"
     stop_grace_period: 1m30s
+    environment:
+      - API_HOST=fintrack_api_1
+      - API_PORT=8888
+    networks:
+      - frontend
 
 networks:
   frontend:
