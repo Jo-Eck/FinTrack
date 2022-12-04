@@ -19,10 +19,13 @@ def get_explorer():
 @app.route('/')
 def index():
     """
+    Testing methodology: Setup TestDB with clean-slate information.
+    Execute index with known parameters and compare output with expected values.
+    Input: None (no input)
+    Output: 'Whats up' page
     Front Page
     >>> index()
     "Whats up?"
-    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
     """
     return "Whats up?"
 
@@ -32,9 +35,13 @@ def index():
 def get_transactions():
     """
     Returns all the transactions in the database for a given user
-    >>> get_transaction()
-    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
-    ""
+
+    Testing methodology: Setup TestDB with clean-slate information. 
+    Execute get_transactions with known parameters and compare output with expected values.
+    Login the test-user. Test-users transactions are known, execute get_transactions and 
+    compare returned values with known data for test user.
+    >>> get_transactions()
+    "Set of transactions for logged in user"
     """
     with get_explorer() as explorer:
         return explorer.get_last_transactions(request.json["username"])
@@ -44,11 +51,14 @@ def get_transactions():
 @auth.login_required
 def create_new_transaction():
     """
-    Calls for a new Trasnaction to be inserted into the Database with the
-    recieved Jsons
+    Calls for a new Transaction to be inserted into the Database with the
+    received Json-strings
+        Testing methodology: Setup TestDB with clean-slate information.
+    Execute create_new_transaction with known parameters 
+    and compare output with expected values via get_transactions afterwards.
     >>> create_new_transaction()
     "Transaction inserted", 200
-    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
+
     """
     json = request.json
     try:
@@ -66,9 +76,11 @@ def create_new_transaction():
 def delete_transaction():
     """
     Deletes a transaction from the database
+    Testing methodology: Setup TestDB with clean-slate information.
+    Execute delete_transaction with previously inserted transaction,
+    check that transaction has been removed using get_transactions afterwards.
     >>> delete_transaction()
-    Testing methodology: Setup TestDB with clean-slate information. Execute <method> with known parameters and compare output with expected values.
-    ""
+    "Success"
     """
     json = request.json
     with get_explorer() as explorer:
