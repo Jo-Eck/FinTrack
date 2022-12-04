@@ -91,13 +91,13 @@ def delete_transaction():
 @auth.login_required
 def get_categories():
     """
-    Returns all the categories
+    Returns all the categories in the database.
+
+    Testing methodology: Setup TestDB with clean-slate information.
+    Insert known categories into the database.
+    Execute get_categories and compare output expected values.
     >>> get_categories()
-    "Entertainment, Lebensmittel"
-    Testing methodology:
-    Setup TestDB with clean-slate information.
-    Execute get_categories() with known parameters and
-    compare output with expected values.
+    "Set of known categories"
     """
     with get_explorer() as explorer:
         return explorer.get_categories()
@@ -107,13 +107,13 @@ def get_categories():
 @auth.login_required
 def get_users():
     """
-    Returns all the usernames
+    Returns all the usernames in the database.
+
+    Testing methodology: Setup TestDB with clean-slate information.
+    Insert known users into the database.
+    Execute get_users and compare output with expected values.
     >>> get_users()
-    Testing methodology:
-    Setup TestDB with clean-slate information.
-    Execute  with known parameters and
-    compare output with expected values.
-    ""
+    "set of known users"
     """
     with get_explorer() as explorer:
         return explorer.get_users()
